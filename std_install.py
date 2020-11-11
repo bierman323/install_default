@@ -88,7 +88,12 @@ def check_tmux():
 # Check that zsh is installed
 # if not install zsh
 def check_zsh():
+    global config_path
+    global home
     check_package('zsh')
+    path_to_rc = f'{config_path}/{os_type}/bashrc'
+    dst_file = f'{home}/.bashrc'
+    subprocess.call(['cp', path_to_rc, dst_file])
 
 # Configure VIM, TMUX, zsh, git
 
@@ -113,7 +118,7 @@ def main():
     if do_all:
         check_vim()
         check_tmux()
-#        check_zsh()
+        check_zsh()
     else:
         if args.vim:
             check_vim()
