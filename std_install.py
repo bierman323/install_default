@@ -93,7 +93,7 @@ def check_zsh():
     check_package('zsh')
     path_to_rc = f'{config_path}/{os_type}/zshrc'
     dst_file = f'{home}/.zshrc'
-    os.symlink(path_to_rc, dst_file])
+    os.symlink(path_to_rc, dst_file)
 
 # Configure VIM, TMUX, zsh, git
 
