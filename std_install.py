@@ -33,6 +33,7 @@ def setup_args():
 # Check to see if a package has been installed on the Linux system
 def check_package(program):
     status = subprocess.call(['which', f'{program}'])
+    print(status)
     if not status == 0:
         os.system(f'sudo apt install {program} -y')
 
@@ -57,11 +58,24 @@ def check_vim():
     check_vundle()
     add_vimrc()
 
+def check_file_exists(dst_file):
+    if os.path.exists(dst_file):
+        if not os.path.islink(dst_file):
+            move_file = f'{dst_file}.old'
+            if os.path.exists(move_file):
+               os.remove(move_file)
+            os.rename(dst_file, move_file)
+        else:
+            os.remove(dst_file)
+
+
 def add_vimrc():
     global config_path
     global home
-    path_to_rc = f'{config_path}/{os_type}/vimrc'
+
     dst_file = f'{home}/.vimrc'
+    check_file_exists(dst_file)
+    path_to_rc = f'{config_path}/{os_type}/vimrc'
     os.symlink(path_to_rc, dst_file)
 
 
@@ -83,6 +97,7 @@ def check_tmux():
     check_package('tmux')
     path_to_rc = f'{config_path}/{os_type}/tmux.conf'
     dst_file = f'{home}/.tmux.conf'
+    check_file_exists(dst_file)
     os.symlink(path_to_rc, dst_file)
 
 # Check that zsh is installed
@@ -93,9 +108,11 @@ def check_zsh():
     check_package('zsh')
     path_to_rc = f'{config_path}/{os_type}/zshrc'
     dst_file = f'{home}/.zshrc'
+    check_file_exists(dst_file)
     os.symlink(path_to_rc, dst_file)
 
-# Configure VIM, TMUX, zsh, git
+# Make sure that zsh is the shell used
+#def default_shell():
 
 
 # What platform are we running on
