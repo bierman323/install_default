@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import argparse, platform, sys, os, subprocess
+import argparse, platform, sys, os, subprocess, shutil
 
 # Global Variables, not great for modules
 path = ''
@@ -9,6 +9,7 @@ home = ''
 vundle_path = '.vim/bundle/Vundle.vim'
 github_clone = 'https://github.com/bierman323/configs.git'
 vundle_clone = 'https://github.com/VundleVim/Vundle.vim.git'
+oh_my_path = '.local/oh-my-zsh'
 
 def setup_os():
     global path
@@ -33,7 +34,6 @@ def setup_args():
 # Check to see if a package has been installed on the Linux system
 def check_package(program):
     status = subprocess.call(['which', f'{program}'])
-    print(status)
     if not status == 0:
         os.system(f'sudo apt install {program} -y')
 
@@ -105,14 +105,31 @@ def check_tmux():
 def check_zsh():
     global config_path
     global home
+    
     check_package('zsh')
+    oh_my()
     path_to_rc = f'{config_path}/{os_type}/zshrc'
     dst_file = f'{home}/.zshrc'
     check_file_exists(dst_file)
     os.symlink(path_to_rc, dst_file)
 
-# Make sure that zsh is the shell used
-#def default_shell():
+    # change the default shell to zsh
+    command = 'which zsh'
+    which_zsh = subprocess.check_output(command, shell=True)
+    subprocess.call(['sudo','chsh', '-s', '/usr/bin/zsh'])
+
+
+def oh_my():
+    global oh_my_path
+
+    home_path = os.path.expanduser("~")
+    path_oh = f'{home_path}/{oh_my_path}'
+    os.environ['ZSH'] = path_oh
+
+    if not os.path.exists(path_oh):
+        subprocess.call(['wget', '-O', 'install.sh', 'https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh'])
+        subprocess.call(['sh', 'install.sh'])
+        return
 
 
 # What platform are we running on
