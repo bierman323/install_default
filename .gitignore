@@ -130,3 +130,6 @@ dmypy.json
 
 # Vim swap files
 .swp
+
+# ctag files
+tags
