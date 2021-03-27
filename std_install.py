@@ -105,7 +105,7 @@ def check_tmux():
 def check_zsh():
     global config_path
     global home
-    
+
     check_package('zsh')
     oh_my()
     path_to_rc = f'{config_path}/{os_type}/zshrc'
@@ -131,6 +131,10 @@ def oh_my():
         subprocess.call(['sh', 'install.sh'])
         return
 
+def ctags_install():
+
+    check_package('ctags')
+
 
 # What platform are we running on
 def get_os():
@@ -153,6 +157,7 @@ def main():
         check_vim()
         check_tmux()
         check_zsh()
+        ctags_install()
     else:
         if args.vim:
             check_vim()
