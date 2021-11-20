@@ -133,7 +133,7 @@ def oh_my():
 
 def ctags_install():
 
-    check_package('ctags')
+    check_package('universal-ctags')
 
 
 # What platform are we running on
