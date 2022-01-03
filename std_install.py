@@ -27,6 +27,7 @@ def setup_args():
     parser.add_argument('-v', '--vim', help="Configure VIM", action='store_true', default=False)
     parser.add_argument('-t', '--tmux', help="Configure TMUX", action='store_true', default=False)
     parser.add_argument('-z', '--zsh', help="Configure ZSH", action='store_true', default=False)
+    parser.add_argument('-d', '--delete', help="Delete augmentation", action='store_true', default=False)
 
     args = parser.parse_args()
     return args
@@ -135,6 +136,12 @@ def ctags_install():
 
     check_package('universal-ctags')
 
+# remove the config
+def delete_configs():
+    #check config dir
+    config_path = f'{path}/configs'
+    if os.path.exists(config_path) and os.path.isdir(config_path):
+        shutil.remtree(config_path)
 
 # What platform are we running on
 def get_os():
@@ -150,22 +157,25 @@ def main():
     else:
         do_all = False
         args = setup_args()
-    # Make sure we have git
-    check_git()
 
     if do_all:
+        check_git()
         check_vim()
         check_tmux()
         check_zsh()
         ctags_install()
     else:
+        if args.delete:
+            delete_configs()
+            return
+        check_git()
         if args.vim:
             check_vim()
         if args.tmux:
             check_tmux()
         if args.zsh:
             check_zsh()
-#
+
 
 # start of execution
 if __name__ == '__main__':
