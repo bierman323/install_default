@@ -141,7 +141,7 @@ def delete_configs():
     #check config dir
     config_path = f'{path}/configs'
     if os.path.exists(config_path) and os.path.isdir(config_path):
-        shutil.remtree(config_path)
+        shutil.rmtree(config_path)
 
 # What platform are we running on
 def get_os():
