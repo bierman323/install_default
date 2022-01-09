@@ -139,9 +139,10 @@ def ctags_install():
 # remove the config
 def delete_configs():
     #check config dir
-    config_path = f'{path}/configs'
-    if os.path.exists(config_path) and os.path.isdir(config_path):
-        shutil.rmtree(config_path)
+    home_path = os.path.expanduser("~")
+    config_dir = f'{home_path}/.code'
+    if os.path.exists(config_dir) and os.path.isdir(config_dir):
+        shutil.rmtree(config_dir)
 
 # What platform are we running on
 def get_os():
