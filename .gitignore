@@ -133,3 +133,6 @@ dmypy.json
 
 # ctag files
 tags
+
+# VSCode
+.vscode/
