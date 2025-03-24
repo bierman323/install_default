@@ -108,15 +108,23 @@ def check_zsh():
 
     check_package('zsh')
     oh_my()
-    path_to_rc = f'{config_path}/.zshrc'
-    dst_file = f'{home}/.zshrc'
-    check_file_exists(dst_file)
-    os.symlink(path_to_rc, dst_file)
+
+    create_symlink([".zshrc", ".zshrc_eza", ".zshrc_ohmyzsh"])
 
     # change the default shell to zsh
     command = 'which zsh'
     which_zsh = subprocess.check_output(command, shell=True)
     subprocess.call(['sudo','chsh', '-s', '/usr/bin/zsh'])
+
+
+def create_symlink(rc_file):
+    global config_path
+    global home
+    for item in rc_file:
+        source_path = f'{config_path}/{rc_file}'
+        dest_path = f'{home}/{rc_file}'
+        check_file_exists(dest_path)
+        os.symlink(source_path, dest_path)
 
 
 def oh_my():
