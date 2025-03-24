@@ -75,7 +75,7 @@ def add_vimrc():
 
     dst_file = f'{home}/.vimrc'
     check_file_exists(dst_file)
-    path_to_rc = f'{config_path}/{os_type.lower()}/.vimrc'
+    path_to_rc = f'{config_path}/.vimrc'
     os.symlink(path_to_rc, dst_file)
 
 
@@ -95,7 +95,7 @@ def check_tmux():
     global config_path
     global home
     check_package('tmux')
-    path_to_rc = f'{config_path}/{os_type.lower()}/.tmux.conf'
+    path_to_rc = f'{config_path}/.tmux.conf'
     dst_file = f'{home}/.tmux.conf'
     check_file_exists(dst_file)
     os.symlink(path_to_rc, dst_file)
@@ -108,7 +108,7 @@ def check_zsh():
 
     check_package('zsh')
     oh_my()
-    path_to_rc = f'{config_path}/{os_type.lower()}/.zshrc'
+    path_to_rc = f'{config_path}/.zshrc'
     dst_file = f'{home}/.zshrc'
     check_file_exists(dst_file)
     os.symlink(path_to_rc, dst_file)
