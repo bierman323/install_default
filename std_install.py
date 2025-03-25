@@ -143,7 +143,11 @@ def oh_my():
     if not os.path.exists(path_oh):
         subprocess.call(['wget', '-O', 'install.sh', 'https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh'])
         subprocess.call(['sh', 'install.sh'])
-        return
+
+    path_to_rc = f'{config_path}/bierman-fino.zsh-theme'
+    dst_file = f'{path_oh}/themes/bierman-fino.zsh-theme'
+    check_file_exists(dst_file)
+    os.symlink(path_to_rc, dst_file)
 
 def ctags_install():
 
