@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse, platform, sys, os, subprocess, shutil
+from software_install.eza_install import get_eza
 
 # Global Variables, not great for modules
 path = ''
@@ -110,19 +111,21 @@ def check_zsh():
     oh_my()
 
     create_symlink([".zshrc", ".zshrc_eza", ".zshrc_ohmyzsh"])
+    # Install eza
+    get_eza()
 
     # change the default shell to zsh
     command = 'which zsh'
     which_zsh = subprocess.check_output(command, shell=True)
-    subprocess.call(['sudo','chsh', '-s', '/usr/bin/zsh'])
+    subprocess.call(['sudo','chsh', '-s', "/usr/bin/zsh"])
 
 
 def create_symlink(rc_file):
     global config_path
     global home
     for item in rc_file:
-        source_path = f'{config_path}/{rc_file}'
-        dest_path = f'{home}/{rc_file}'
+        source_path = f'{config_path}/{item}'
+        dest_path = f'{home}/{item}'
         check_file_exists(dest_path)
         os.symlink(source_path, dest_path)
 
