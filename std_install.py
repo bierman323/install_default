@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-import argparse, platform, sys, os, subprocess, shutil
+import argparse, platform, sys, os, subprocess
 from software_install.eza_install import get_eza
+from software_install.btop_install import get_btop
 
 # Global Variables, not great for modules
 path = ''
@@ -106,13 +107,15 @@ def check_tmux():
 def check_zsh():
     global config_path
     global home
-
-    check_package('zsh')
+    # Check for a few packages
+    for item in ["zsh", "bzip2", "make"]:
+        check_package(item)
     oh_my()
 
     create_symlink([".zshrc", ".zshrc_eza", ".zshrc_ohmyzsh"])
     # Install eza
     get_eza()
+    get_btop()
 
     # change the default shell to zsh
     command = 'which zsh'
