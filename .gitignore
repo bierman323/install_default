@@ -136,3 +136,10 @@ tags
 
 # VSCode
 .vscode/
+
+# Claude code
+CLAUDE.md
+.claude/
+
+# Mac crap
+.DS_Store
