@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""btop installation module with dry-run support."""
 
 import os
 import requests
@@ -19,13 +20,15 @@ ARCH_MAP = {
     'armv7l': 'armv7'
 }
 
+
 def get_normalized_arch():
-    """Get architecture in format GitHub uses"""
+    """Get architecture in format GitHub uses."""
     arch = platform.machine().lower()
     return ARCH_MAP.get(arch, arch)
 
+
 def check_btop_installed():
-    """Check if btop is already installed"""
+    """Check if btop is already installed."""
     btop_path = shutil.which('btop')
     if btop_path:
         try:
@@ -37,8 +40,9 @@ def check_btop_installed():
             return False
     return False
 
+
 def get_latest_btop_version():
-    """Get the latest btop version from GitHub API"""
+    """Get the latest btop version from GitHub API."""
     try:
         response = requests.get('https://api.github.com/repos/aristocratos/btop/releases/latest', timeout=10)
         response.raise_for_status()
@@ -49,8 +53,9 @@ def get_latest_btop_version():
         logging.warning(f"Failed to get latest version, using default: {e}")
         return "v1.4.0"
 
+
 def download_with_retry(url, dest_path, max_retries=3):
-    """Download file with exponential backoff retry"""
+    """Download file with exponential backoff retry."""
     for attempt in range(max_retries):
         try:
             logging.info(f"Downloading from {url} (attempt {attempt + 1}/{max_retries})")
@@ -76,8 +81,16 @@ def download_with_retry(url, dest_path, max_retries=3):
 
     return False
 
-def get_btop():
-    """Install btop with proper error handling and cleanup"""
+
+def get_btop(dry_run: bool = False):
+    """Install btop with proper error handling and cleanup.
+
+    Args:
+        dry_run: If True, only log what would be done without making changes.
+
+    Returns:
+        True if installation succeeded (or would succeed in dry-run mode).
+    """
     logging.info("Setting up btop")
 
     # Check if already installed
@@ -90,6 +103,12 @@ def get_btop():
 
     # Get latest version
     version = get_latest_btop_version()
+
+    if dry_run:
+        url = f"https://github.com/aristocratos/btop/releases/download/{version}/btop-{arch}-linux-musl.tbz"
+        logging.info(f"[DRY RUN] Would download btop {version} from {url}")
+        logging.info("[DRY RUN] Would extract and run 'sudo make install'")
+        return True
 
     # Create temp directory for downloads
     with tempfile.TemporaryDirectory() as temp_dir:

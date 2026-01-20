@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""eza installation module with dry-run support."""
 
 import os
 import requests
@@ -19,13 +20,15 @@ ARCH_MAP = {
     'armv7l': 'armv7'
 }
 
+
 def get_normalized_arch():
-    """Get architecture in format GitHub uses"""
+    """Get architecture in format GitHub uses."""
     arch = platform.machine().lower()
     return ARCH_MAP.get(arch, arch)
 
+
 def check_eza_installed():
-    """Check if eza is already installed"""
+    """Check if eza is already installed."""
     eza_path = shutil.which('eza')
     if eza_path:
         try:
@@ -37,8 +40,9 @@ def check_eza_installed():
             return False
     return False
 
+
 def download_with_retry(url, dest_path, max_retries=3):
-    """Download file with exponential backoff retry"""
+    """Download file with exponential backoff retry."""
     for attempt in range(max_retries):
         try:
             logging.info(f"Downloading from {url} (attempt {attempt + 1}/{max_retries})")
@@ -64,8 +68,16 @@ def download_with_retry(url, dest_path, max_retries=3):
 
     return False
 
-def get_eza():
-    """Install eza with proper error handling and cleanup"""
+
+def get_eza(dry_run: bool = False):
+    """Install eza with proper error handling and cleanup.
+
+    Args:
+        dry_run: If True, only log what would be done without making changes.
+
+    Returns:
+        True if installation succeeded (or would succeed in dry-run mode).
+    """
     logging.info("Setting up eza")
 
     # Check if already installed
@@ -75,6 +87,12 @@ def get_eza():
     # Get normalized architecture
     arch = get_normalized_arch()
     logging.info(f"Detected architecture: {arch}")
+
+    if dry_run:
+        url = f"https://github.com/eza-community/eza/releases/latest/download/eza_{arch}-unknown-linux-gnu.tar.gz"
+        logging.info(f"[DRY RUN] Would download eza from {url}")
+        logging.info("[DRY RUN] Would extract and install to /usr/local/bin/eza")
+        return True
 
     # Create temp directory for downloads
     with tempfile.TemporaryDirectory() as temp_dir:
