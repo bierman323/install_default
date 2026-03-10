@@ -106,8 +106,7 @@ class BrewManager(PackageManager):
         try:
             # Download and run the install script
             result = subprocess.run(
-                ['/bin/bash', '-c', f'$(curl -fsSL {install_url})'],
-                shell=True,
+                ['bash', '-c', f'curl -fsSL {install_url} | bash'],
                 env={**os.environ, 'NONINTERACTIVE': '1'},
                 check=False
             )

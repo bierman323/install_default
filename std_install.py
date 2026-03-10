@@ -72,7 +72,8 @@ def setup_logging(quiet: bool = False, verbose: bool = False):
     logging.basicConfig(
         level=level,
         format='%(asctime)s - %(levelname)s - %(message)s',
-        handlers=handlers
+        handlers=handlers,
+        force=True
     )
     logging.info("Starting installation script v%s", __version__)
 
